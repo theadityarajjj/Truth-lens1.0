@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#101512">
+    <title>Truth Lens | Intelligence Dashboard</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+<div class="app-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="brand">
+            <div class="brand-icon">T</div>
+            <div>
+                <h2>TRUTH LENS</h2>
+                <span>INTELLIGENCE SYSTEM</span>
+            </div>
+        </div>
+
+        <div class="nav-label">WORKSPACE</div>
+
+        <nav class="navigation">
+            <button class="nav-item active" data-page="overview">
+                <span>▦</span> Overview
+            </button>
+            <button class="nav-item" data-page="claim-intelligence">
+                <span>⌕</span> Claim Intelligence
+            </button>
+            <button class="nav-item" data-page="evidence">
+                <span>◈</span> Evidence Explorer
+            </button>
+            <button class="nav-item" data-page="sources">
+                <span>◎</span> Source Intelligence
+            </button>
+            <button class="nav-item" data-page="bias">
+                <span>◉</span> Bias & Fallacies
+            </button>
+            <button class="nav-item" data-page="risk">
+                <span>⚑</span> Risk Intelligence
+            </button>
+            <button class="nav-item" data-page="history">
+                <span>◷</span> Analysis History
+            </button>
+
+            <div class="nav-label">TOOLS</div>
+
+            <button class="nav-item" data-page="new-analysis">
+                <span>＋</span> New Analysis
+            </button>
+
+            <button class="nav-item locked" data-page="full-analysis">
+                <span>🔒</span> Full Analysis
+                <span class="coming-soon">SOON</span>
+            </button>
+
+            <button class="nav-item" data-page="settings">
+                <span>⚙</span> Settings
+            </button>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="system-status">
+                <span class="status-dot"></span>
+                SYSTEM OPERATIONAL
+            </div>
+            <small>TRUTH LENS v1.0</small>
+        </div>
+    </aside>
+
+    <!-- MAIN AREA -->
+    <main class="main-content">
+
+        <header class="topbar">
+            <button class="menu-toggle" id="menuToggle">☰</button>
+
+            <div class="breadcrumb">
+                <span>Workspace</span>
+                <span>/</span>
+                <strong id="pageTitle">Overview</strong>
+            </div>
+
+            <div class="topbar-right">
+                <div class="live-indicator">
+                    <span class="status-dot"></span>
+                    LIVE
+                </div>
+                <div class="profile-avatar">TL</div>
+            </div>
+        </header>
+
+        <!-- OVERVIEW -->
+        <section class="page active" id="page-overview">
+
+            <div class="page-heading">
+                <div>
+                    <p class="eyebrow">INTELLIGENCE OVERVIEW</p>
+                    <h1>Truth Intelligence Dashboard</h1>
+                    <p class="subtitle">
+                        Monitor claims, evidence quality, source credibility
+                        and analytical patterns.
+                    </p>
+                </div>
+
+                <button class="primary-button" data-go="new-analysis">
+                    ＋ New Investigation
+                </button>
+            </div>
+
+            <!-- KPI CARDS -->
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <span>Total Investigations</span>
+                        <span class="stat-icon">▦</span>
+                    </div>
+                    <h2 id="totalAnalyses">0</h2>
+                    <small>All recorded analyses</small>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <span>Claims Examined</span>
+                        <span class="stat-icon">⌕</span>
+                    </div>
+                    <h2 id="totalClaims">0</h2>
+                    <small>Claims processed</small>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <span>Evidence Sources</span>
+                        <span class="stat-icon">◈</span>
+                    </div>
+                    <h2 id="totalSources">0</h2>
+                    <small>Sources retrieved</small>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <span>Supported Claims</span>
+                        <span class="stat-icon">✓</span>
+                    </div>
+                    <h2 id="supportedClaims">0</h2>
+                    <small>Supported verdicts</small>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <span>Disputed Claims</span>
+                        <span class="stat-icon">⚠</span>
+                    </div>
+                    <h2 id="disputedClaims">0</h2>
+                    <small>Disputed verdicts</small>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <span>AI Provider</span>
+                        <span class="stat-icon">✧</span>
+                    </div>
+                    <h2 id="aiProvider">--</h2>
+                    <small>Active analysis provider</small>
+                </div>
+
+            </div>
+
+            <!-- CHART ROW 1 -->
+            <div class="section-heading">
+                <div>
+                    <h2>Analytical Overview</h2>
+                    <p>Distribution of verdicts and evidence quality.</p>
+                </div>
+            </div>
+
+            <div class="charts-grid two-column">
+
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h3>Verdict Distribution</h3>
+                            <p>Breakdown of claim outcomes</p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="verdictChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h3>Evidence Quality</h3>
+                            <p>Distribution of retrieved evidence</p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="evidenceQualityChart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- CHART ROW 2 -->
+            <div class="charts-grid two-column">
+
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h3>Claim Confidence</h3>
+                            <p>Confidence scores across investigations</p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="confidenceChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h3>Source Credibility</h3>
+                            <p>Distribution of source assessments</p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="sourceCredibilityChart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- CHART ROW 3 -->
+            <div class="charts-grid two-column">
+
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h3>Investigation Activity</h3>
+                            <p>Recorded activity over time</p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="activityChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h3>Evidence Relevance</h3>
+                            <p>Relevance scores of retrieved evidence</p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="relevanceChart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- CHART ROW 4 -->
+            <div class="charts-grid two-column">
+
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h3>Bias Detection</h3>
+                            <p>Detected bias patterns</p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="biasChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h3>Logical Fallacies</h3>
+                            <p>Identified reasoning patterns</p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="fallacyChart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- CHART ROW 5 -->
+            <div class="charts-grid two-column">
+
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h3>Publisher Contribution</h3>
+                            <p>Evidence distribution by publisher</p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="publisherChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h3>Verdict Trends</h3>
+                            <p>Verdict patterns across investigations</p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="verdictTrendChart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RECENT ACTIVITY -->
+            <div class="section-heading">
+                <div>
+                    <h2>Recent Investigations</h2>
+                    <p>Your latest analytical reports.</p>
+                </div>
+                <button class="text-button" data-go="history">
+                    View all →
+                </button>
+            </div>
+
+            <div class="panel">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>INVESTIGATION</th>
+                                <th>VERDICT</th>
+                                <th>CONFIDENCE</th>
+                                <th>DATE</th>
+                                <th>STATUS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentHistory">
+                            <tr>
+                                <td colspan="5" class="empty-state">
+                                    No investigations recorded yet.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- CLAIM INTELLIGENCE -->
+        <section class="page" id="page-claim-intelligence">
+            <div class="page-heading">
+                <div>
+                    <p class="eyebrow">CLAIM ANALYSIS</p>
+                    <h1>Claim Intelligence</h1>
+                    <p class="subtitle">
+                        Examine claim-level findings and verdict patterns.
+                    </p>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span>Total Claims</span>
+                    <h2 id="claimPageTotal">0</h2>
+                </div>
+                <div class="stat-card">
+                    <span>Supported</span>
+                    <h2 id="claimPageSupported">0</h2>
+                </div>
+                <div class="stat-card">
+                    <span>Refuted</span>
+                    <h2 id="claimPageRefuted">0</h2>
+                </div>
+                <div class="stat-card">
+                    <span>Uncertain</span>
+                    <h2 id="claimPageUncertain">0</h2>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3>Claim Records</h3>
+                </div>
+                <div id="claimRecords" class="record-list">
+                    <div class="empty-state">No claim records available.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EVIDENCE EXPLORER -->
+        <section class="page" id="page-evidence">
+            <div class="page-heading">
+                <div>
+                    <p class="eyebrow">RESEARCH INTELLIGENCE</p>
+                    <h1>Evidence Explorer</h1>
+                    <p class="subtitle">
+                        Inspect retrieved evidence and its relevance.
+                    </p>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span>Total Evidence</span>
+                    <h2 id="evidenceTotal">0</h2>
+                </div>
+                <div class="stat-card">
+                    <span>Direct Evidence</span>
+                    <h2 id="directEvidence">0</h2>
+                </div>
+                <div class="stat-card">
+                    <span>Contextual Evidence</span>
+                    <h2 id="contextEvidence">0</h2>
+                </div>
+                <div class="stat-card">
+                    <span>Weak Evidence</span>
+                    <h2 id="weakEvidence">0</h2>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3>Retrieved Evidence Records</h3>
+                </div>
+                <div id="evidenceRecords" class="record-list">
+                    <div class="empty-state">No evidence available.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SOURCE INTELLIGENCE -->
+        <section class="page" id="page-sources">
+            <div class="page-heading">
+                <div>
+                    <p class="eyebrow">SOURCE EVALUATION</p>
+                    <h1>Source Intelligence</h1>
+                    <p class="subtitle">
+                        Explore publishers, domains and source assessments.
+                    </p>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span>Unique Sources</span>
+                    <h2 id="uniqueSources">0</h2>
+                </div>
+                <div class="stat-card">
+                    <span>Publishers</span>
+                    <h2 id="publisherCount">0</h2>
+                </div>
+                <div class="stat-card">
+                    <span>Source Domains</span>
+                    <h2 id="domainCount">0</h2>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3>Source Directory</h3>
+                </div>
+                <div id="sourceRecords" class="record-list">
+                    <div class="empty-state">No source records available.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BIAS AND FALLACIES -->
+        <section class="page" id="page-bias">
+            <div class="page-heading">
+                <div>
+                    <p class="eyebrow">COGNITIVE ANALYSIS</p>
+                    <h1>Bias & Fallacies</h1>
+                    <p class="subtitle">
+                        Examine potential bias and reasoning weaknesses.
+                    </p>
+                </div>
+            </div>
+
+            <div class="charts-grid two-column">
+                <div class="panel">
+                    <div class="panel-heading">
+                        <h3>Bias Distribution</h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="biasDetailChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-heading">
+                        <h3>Fallacy Distribution</h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="fallacyDetailChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3>Detection Records</h3>
+                </div>
+                <div id="biasRecords" class="record-list">
+                    <div class="empty-state">No detection records available.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- RISK INTELLIGENCE -->
+        <section class="page" id="page-risk">
+            <div class="page-heading">
+                <div>
+                    <p class="eyebrow">RISK MONITORING</p>
+                    <h1>Risk Intelligence</h1>
+                    <p class="subtitle">
+                        Review uncertainty, conflicting evidence and
+                        potential reliability concerns.
+                    </p>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span>Uncertain Verdicts</span>
+                    <h2 id="riskUncertain">0</h2>
+                </div>
+                <div class="stat-card">
+                    <span>Insufficient Evidence</span>
+                    <h2 id="riskInsufficient">0</h2>
+                </div>
+                <div class="stat-card">
+                    <span>Potential Conflicts</span>
+                    <h2 id="riskConflicts">0</h2>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3>Risk Register</h3>
+                </div>
+                <div id="riskRecords" class="record-list">
+                    <div class="empty-state">No risk records available.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- HISTORY -->
+        <section class="page" id="page-history">
+            <div class="page-heading">
+                <div>
+                    <p class="eyebrow">INVESTIGATION ARCHIVE</p>
+                    <h1>Analysis History</h1>
+                    <p class="subtitle">
+                        Browse previously completed investigations.
+                    </p>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>INVESTIGATION</th>
+                                <th>VERDICT</th>
+                                <th>CONFIDENCE</th>
+                                <th>DATE</th>
+                                <th>ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTable">
+                            <tr>
+                                <td colspan="5" class="empty-state">
+                                    No history available.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="historyDetail" class="panel hidden">
+                <div class="panel-heading">
+                    <h3>Investigation Details</h3>
+                    <button class="text-button" id="closeHistoryDetail">
+                        Close ✕
+                    </button>
+                </div>
+                <div id="historyDetailContent"></div>
+            </div>
+        </section>
+
+        <!-- NEW ANALYSIS -->
+        <section class="page" id="page-new-analysis">
+            <div class="page-heading">
+                <div>
+                    <p class="eyebrow">START INVESTIGATION</p>
+                    <h1>New Analysis</h1>
+                    <p class="subtitle">
+                        Submit a statement or passage for investigation.
+                    </p>
+                </div>
+            </div>
+
+            <div class="analysis-layout">
+                <div class="panel analysis-input-panel">
+                    <div class="panel-heading">
+                        <h3>Input Statement</h3>
+                        <span class="live-indicator">TEXT ANALYSIS</span>
+                    </div>
+
+                    <form id="analysisForm">
+                        <label for="claimInput">Statement to investigate</label>
+
+                        <textarea
+                            id="claimInput"
+                            name="text"
+                            placeholder="Enter a factual claim or passage you want Truth Lens to investigate..."
+                            required
+                            minlength="10"
+                        ></textarea>
+
+                        <div class="input-footer">
+                            <span id="charCount">0 characters</span>
+                            <span>Text-only analysis</span>
+                        </div>
+
+                        <button class="primary-button full-width" type="submit" id="analyzeButton">
+                            Analyse Statement →
+                        </button>
+                    </form>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-heading">
+                        <h3>Analysis Pipeline</h3>
+                    </div>
+
+                    <div class="pipeline">
+                        <div class="pipeline-step">
+                            <span>01</span>
+                            <div>
+                                <strong>Claim Extraction</strong>
+                                <p>Identify factual statements.</p>
+                            </div>
+                        </div>
+
+                        <div class="pipeline-step">
+                            <span>02</span>
+                            <div>
+                                <strong>Evidence Retrieval</strong>
+                                <p>Search relevant information.</p>
+                            </div>
+                        </div>
+
+                        <div class="pipeline-step">
+                            <span>03</span>
+                            <div>
+                                <strong>Source Assessment</strong>
+                                <p>Evaluate retrieved sources.</p>
+                            </div>
+                        </div>
+
+                        <div class="pipeline-step">
+                            <span>04</span>
+                            <div>
+                                <strong>AI Verification</strong>
+                                <p>Compare claims against evidence.</p>
+                            </div>
+                        </div>
+
+                        <div class="pipeline-step">
+                            <span>05</span>
+                            <div>
+                                <strong>Final Assessment</strong>
+                                <p>Generate findings and verdicts.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="analysisLoading" class="panel hidden">
+                <div class="loading-indicator"></div>
+                <h3>Investigation in progress...</h3>
+                <p>Retrieving evidence and analysing the submitted statement.</p>
+            </div>
+
+            <div id="analysisResult" class="panel hidden">
+                <div class="panel-heading">
+                    <h3>Investigation Report</h3>
+                </div>
+                <div id="analysisResultContent"></div>
+            </div>
+        </section>
+
+        <!-- FULL ANALYSIS LOCKED -->
+        <section class="page" id="page-full-analysis">
+            <div class="locked-page">
+                <div class="lock-icon">🔒</div>
+                <p class="eyebrow">UNDER DEVELOPMENT</p>
+                <h1>Full Analysis</h1>
+                <p>
+                    Advanced investigation capabilities are currently
+                    under development.
+                </p>
+                <span class="coming-soon-large">COMING SOON</span>
+            </div>
+        </section>
+
+        <!-- SETTINGS -->
+        <section class="page" id="page-settings">
+            <div class="page-heading">
+                <div>
+                    <p class="eyebrow">SYSTEM CONFIGURATION</p>
+                    <h1>Settings</h1>
+                    <p class="subtitle">
+                        Application status and system information.
+                    </p>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3>System Health</h3>
+                </div>
+                <div id="systemHealth" class="record-list">
+                    <div class="empty-state">Checking system status...</div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3>About Truth Lens</h3>
+                </div>
+                <p>
+                    Truth Lens is an AI-assisted fact-checking system
+                    designed to examine factual claims using retrieved
+                    evidence, source assessments and analytical reasoning.
+                </p>
+                <p class="muted">
+                    Version 1.0 · Text-based investigation platform
+                </p>
+            </div>
+        </section>
+
+        <footer class="main-footer">
+            <span>TRUTH LENS © 2026</span>
+            <span>Evidence before conclusions.</span>
+        </footer>
+
+    </main>
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

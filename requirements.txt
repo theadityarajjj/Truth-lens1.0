@@ -1,0 +1,10 @@
+flask
+python-dotenv
+spacy
+scikit-learn
+pandas
+requests
+google-genai
+groq
+ddgs
+pytest
